@@ -17,13 +17,11 @@ jobs:
 
       - name: Install Helm
         uses: azure/setup-helm@v4.2.0
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
       
-      - name: Run some commands
+      - name: Perform Helm lint
+        run: helm lint
+      
+      - name: Create Helm package
         run: |
-          ls -l 
-          pwd
-          helm version
-          helm lint .
-
+          helm package .
+          ls -l
