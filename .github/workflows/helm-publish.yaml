@@ -10,6 +10,9 @@ jobs:
     permissions:
       contents: read
       packages: write
+      attestations: write
+      id-token: write
+
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -19,9 +22,14 @@ jobs:
         uses: azure/setup-helm@v4.2.0
       
       - name: Perform Helm lint
-        run: helm lint
+        run: helm lint .
       
       - name: Create Helm package
         run: |
           helm package .
-          ls -l
+          
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
