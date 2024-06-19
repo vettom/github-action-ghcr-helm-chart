@@ -31,6 +31,24 @@ jobs:
           CHART_VERSION=$(yq e '.version' ./Chart.yaml)
           echo "CHART_NAME=${CHART_NAME}" >> $GITHUB_ENV
           echo "CHART_VERSION=${CHART_VERSION}" >> $GITHUB_ENV
+      - name: Ensure Version updated in Chart.yaml 
+        run: |
+          if git diff Chart.yaml | grep ^+version: > /dev/null ; then
+            echo "INFO: Version update verified"
+          else
+            echo "FAILURE: Version must be updated in Chart.yaml file "
+            exit 1
+          fi
+      - name: Ensure Readme updated for version
+        run: |
+          if grep ${{ env.CHART_VERSION }} README.md ; then
+            echo "INFO : Readme contains version entry"
+          else:
+            echo "FAILURE: README.md must contain version details."
+            exit 1
+          fi
+
+
       - name: Create Helm package
         run: |
           helm package .
