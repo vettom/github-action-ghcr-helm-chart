@@ -1,11 +1,8 @@
-name: Helm Publish
-
+name: Helm lint chart
 on:
   pull_request:
     branches:
-      - main
-  workflow_dispatch:
-  
+      - main 
 jobs:
   helm:
     permissions:
