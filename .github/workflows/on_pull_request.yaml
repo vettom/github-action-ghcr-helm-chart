@@ -1,0 +1,41 @@
+name: Helm Publish
+
+on:
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+  
+jobs:
+  helm:
+    permissions:
+      contents: read
+      packages: write
+      attestations: write
+      id-token: write
+
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        
+      - name: Install Helm
+        uses: azure/setup-helm@v4.2.0
+      
+      - name: Perform Helm lint
+        run: helm lint .
+
+      - name: Extract chart name and version
+        id: extract-chart-info
+        run: |
+          CHART_NAME=$(yq e '.name' ./Chart.yaml)
+          CHART_VERSION=$(yq e '.version' ./Chart.yaml)
+          echo "CHART_NAME=${CHART_NAME}" >> $GITHUB_ENV
+          echo "CHART_VERSION=${CHART_VERSION}" >> $GITHUB_ENV
+
+      - name: Create Helm package
+        run: |
+          helm package .
+  
+      - name: Summary
+        run: echo "Helm chart ${{ env.CHART_NAME }}:${{ env.CHART_VERSION }} ready to be published. "
