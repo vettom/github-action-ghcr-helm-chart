@@ -35,7 +35,8 @@ jobs:
       - name: Ensure Version updated in Chart.yaml 
         run: |
           echo "VERSION: ${{ env.CHART_VERSION }}"
-           git diff Chart.yaml
+          git diff Chart.yaml
+          git diff
           if git diff Chart.yaml | grep ^+version: > /dev/null ; then
             echo "INFO: Version update verified"
           else
