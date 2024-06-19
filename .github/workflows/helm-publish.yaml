@@ -34,6 +34,8 @@ jobs:
           echo "CHART_VERSION=${CHART_VERSION}" >> $GITHUB_ENV
       - name: Ensure Version updated in Chart.yaml 
         run: |
+          echo "VERSION: ${{ env.CHART_VERSION }}"
+           git diff Chart.yaml
           if git diff Chart.yaml | grep ^+version: > /dev/null ; then
             echo "INFO: Version update verified"
           else
