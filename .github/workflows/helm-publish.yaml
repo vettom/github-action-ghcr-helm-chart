@@ -18,6 +18,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Install Helm
         uses: azure/setup-helm@v4.2.0
@@ -34,17 +36,9 @@ jobs:
           echo "CHART_VERSION=${CHART_VERSION}" >> $GITHUB_ENV
       - name: Ensure Version updated in Chart.yaml 
         run: |
-          # Get the latest commit hash
-          LATEST_COMMIT=$(git rev-parse HEAD)
-          
-          # Get the base commit hash of the PR
-          BASE_COMMIT=$(git merge-base HEAD ${{ github.event.pull_request.base.sha }})
-
-          # Perform git diff between the base commit and the latest commit
-          git diff $BASE_COMMIT $LATEST_COMMIT > diff.txt
-
-          # Display the diff output (for debugging purposes)
-          cat diff.txt
+          # Diff HEAD with the previous commit
+          $diff = git diff --name-only HEAD^ HEAD  > file.txt
+          cat file.txt
       - name: Ensure Readme updated for version
         run: |
           if grep ${{ env.CHART_VERSION }} README.md ; then
