@@ -34,3 +34,10 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GHCR_TOKEN }}
+      - name: Push chart to github registry
+        run: | 
+          helm push *.tgz ghcr.io/vettom/
+      - name: Check for Yq
+        run: |
+          ls -l /usr/bin | grep yq
+          ls -l /usr/bin
