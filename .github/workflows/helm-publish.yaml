@@ -1,8 +1,9 @@
 name: Helm Publish
 
 on:
-  push:
-    branches: [ 'main' ]
+  pull_request:
+    branches:
+      - master
   workflow_dispatch:
   
 jobs:
@@ -47,7 +48,6 @@ jobs:
             echo "FAILURE: README.md must contain version details."
             exit 1
           fi
-
 
       - name: Create Helm package
         run: |
