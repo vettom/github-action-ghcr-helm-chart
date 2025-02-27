@@ -1,4 +1,4 @@
-name: Helm package chart and Publish
+name: Build and Publish
 on:
   push:
     branches:
